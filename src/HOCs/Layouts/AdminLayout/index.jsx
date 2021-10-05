@@ -1,0 +1,70 @@
+import React, { useState } from "react";
+import { Layout, Menu } from "antd";
+import {
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+  InsertRowAboveOutlined,
+} from "@ant-design/icons";
+import "./style.css";
+import { Link } from "react-router-dom";
+import Logo from "../../../assets/images/logo.png";
+
+const { Header, Sider, Content } = Layout;
+
+const AdminLayout = ({ children }) => {
+  const [collapsed, setCollapsed] = useState(false);
+
+  const handleSetCollapsed = () => {
+    setCollapsed(!collapsed);
+  };
+
+  return (
+    <Layout id="components-layout-demo-custom-trigger">
+      <Sider trigger={null} collapsible collapsed={collapsed}>
+        <div className="logo">
+          <img src={Logo} alt="logo" />
+        </div>
+        <Menu theme="dark" mode="inline" defaultSelectedKeys={["movies"]}>
+          <Menu.Item key="movies" icon={<VideoCameraOutlined />}>
+            <Link to="/movies">Quản lý phim</Link>
+          </Menu.Item>
+          <Menu.Item key="showtimes" icon={<InsertRowAboveOutlined />}>
+            <Link to="/showtimes">Quản lý lịch chiếu</Link>
+          </Menu.Item>
+          <Menu.Item key="users" icon={<UserOutlined />}>
+            <Link to="/users">Quản lý người dùng</Link>
+          </Menu.Item>
+        </Menu>
+      </Sider>
+      <Layout className="site-layout">
+        <Header className="site-layout-background" style={{ padding: 0 }}>
+          {collapsed ? (
+            <MenuUnfoldOutlined
+              className="trigger"
+              onClick={handleSetCollapsed}
+            />
+          ) : (
+            <MenuFoldOutlined
+              className="trigger"
+              onClick={handleSetCollapsed}
+            />
+          )}
+        </Header>
+        <Content
+          className="site-layout-background"
+          style={{
+            margin: "24px 16px",
+            padding: 24,
+            minHeight: "100vh",
+          }}
+        >
+          {children}
+        </Content>
+      </Layout>
+    </Layout>
+  );
+};
+
+export default AdminLayout;
