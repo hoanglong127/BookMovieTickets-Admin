@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout, Menu } from "antd";
 import {
   MenuUnfoldOutlined,
@@ -7,14 +7,33 @@ import {
   VideoCameraOutlined,
   InsertRowAboveOutlined,
 } from "@ant-design/icons";
+import { Link, useLocation } from "react-router-dom";
 import "./style.css";
-import { Link } from "react-router-dom";
 import Logo from "../../../assets/images/logo.png";
+import AdminAvatar from "../../../component/AdminAvatar";
 
 const { Header, Sider, Content } = Layout;
 
 const AdminLayout = ({ children }) => {
+  const location = useLocation();
+  const [key, setKey] = useState("movies");
   const [collapsed, setCollapsed] = useState(false);
+
+  useEffect(() => {
+    switch (location.pathname) {
+      case "/movies":
+        setKey("movies");
+        break;
+      case "/showtimes":
+        setKey("showtimes");
+        break;
+      case "/users":
+        setKey("users");
+        break;
+      default:
+        setKey("");
+    }
+  }, [location.pathname]);
 
   const handleSetCollapsed = () => {
     setCollapsed(!collapsed);
@@ -26,7 +45,7 @@ const AdminLayout = ({ children }) => {
         <div className="logo">
           <img src={Logo} alt="logo" />
         </div>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={["movies"]}>
+        <Menu theme="dark" mode="inline" selectedKeys={key}>
           <Menu.Item key="movies" icon={<VideoCameraOutlined />}>
             <Link to="/movies">Quản lý phim</Link>
           </Menu.Item>
@@ -51,6 +70,7 @@ const AdminLayout = ({ children }) => {
               onClick={handleSetCollapsed}
             />
           )}
+          <AdminAvatar />
         </Header>
         <Content
           className="site-layout-background"

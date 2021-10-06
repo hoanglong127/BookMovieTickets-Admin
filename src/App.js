@@ -1,20 +1,34 @@
 import "./App.css";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { BrowserRouter, Switch } from "react-router-dom";
 import Movies from "./views/Movies";
 import Users from "./views/Users";
 import Showtimes from "./views/Showtimes";
 import Signin from "./views/Signin";
 import AdminLayout from "./HOCs/Layouts/AdminLayout";
+import { AuthRoute, PrivateRoute } from "./HOCs/Routes";
+import { fetchAdminInfo } from "./store/actions/authAction";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (localStorage.getItem("t_a")) dispatch(fetchAdminInfo);
+  }, []);
+
   return (
     <BrowserRouter>
       <AdminLayout>
         <Switch>
-          <Route path="/movies" component={Movies} />
-          <Route path="/users" component={Users} />
-          <Route path="/showtimes" component={Showtimes} />
-          <Route exact path="/" component={Signin} />
+          <PrivateRoute path="/movies" component={Movies} redirectPath="/" />
+          <PrivateRoute path="/users" component={Users} redirectPath="/" />
+          <PrivateRoute
+            path="/showtimes"
+            component={Showtimes}
+            redirectPath="/"
+          />
+          <AuthRoute exact path="/" component={Signin} redirectPath="/movies" />
         </Switch>
       </AdminLayout>
     </BrowserRouter>
