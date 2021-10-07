@@ -9,6 +9,7 @@ import Signin from "./views/Signin";
 import AdminLayout from "./HOCs/Layouts/AdminLayout";
 import { AuthRoute, PrivateRoute } from "./HOCs/Routes";
 import { fetchAdminInfo } from "./store/actions/authAction";
+import AddMovie from "./views/Movies/AddMovie";
 
 function App() {
   const dispatch = useDispatch();
@@ -21,7 +22,17 @@ function App() {
     <BrowserRouter>
       <AdminLayout>
         <Switch>
-          <PrivateRoute path="/movies" component={Movies} redirectPath="/" />
+          <PrivateRoute
+            exact
+            path="/movies"
+            component={Movies}
+            redirectPath="/"
+          />
+          <PrivateRoute
+            path="/movies/addMovie"
+            component={AddMovie}
+            redirectPath="/"
+          />
           <PrivateRoute path="/users" component={Users} redirectPath="/" />
           <PrivateRoute
             path="/showtimes"

@@ -16,3 +16,19 @@ export const fetchMovies = async (dispatch) => {
     console.log(err);
   }
 };
+
+export const addMovie = (newMovie, alertSuccess) => {
+  return async (dispatch) => {
+    try {
+      await request({
+        method: "POST",
+        url: `${DOMAIN}/api/QuanLyPhim/ThemPhimUploadHinh`,
+        data: newMovie,
+      });
+
+      alertSuccess();
+    } catch (err) {
+      console.log(err.response);
+    }
+  };
+};

@@ -18,3 +18,7 @@
   height: auto;
   margin-right: 20px;
 }
+
+.movieManage .ant-form-item-label {
+  text-align: left;
+}

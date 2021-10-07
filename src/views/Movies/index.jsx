@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import moment from "moment";
+import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Typography, Input, Table } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -78,6 +79,7 @@ const addKey = (list = []) => {
 
 const Movies = () => {
   const [data, setData] = useState([]);
+  const history = useHistory();
   const dispatch = useDispatch();
   const movieList = useSelector((state) => state.movieReducer.movieList);
 
@@ -101,7 +103,11 @@ const Movies = () => {
     <div className="movieManage">
       <Title level={4}>Danh sách phim</Title>
       <div className="movieManage-controls">
-        <Button type="primary" icon={<PlusOutlined />}>
+        <Button
+          onClick={() => history.push("/movies/addMovie")}
+          type="primary"
+          icon={<PlusOutlined />}
+        >
           Thêm phim
         </Button>
         <Search
