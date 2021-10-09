@@ -4,6 +4,7 @@ const actionTypes = {
 
   // MOVIE TYPE
   SET_MOVIE_LIST: "SET_MOVIE_LIST",
+  SET_MOVIE_INFO: "SET_MOVIE_INFO",
 };
 
 export default actionTypes;

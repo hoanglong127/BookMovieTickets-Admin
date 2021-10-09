@@ -7,7 +7,8 @@ import {
   VideoCameraOutlined,
   InsertRowAboveOutlined,
 } from "@ant-design/icons";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useLocation } from "react-router";
 import "./style.css";
 import Logo from "../../../assets/images/logo.png";
 import AdminAvatar from "../../../component/AdminAvatar";

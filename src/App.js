@@ -10,6 +10,7 @@ import AdminLayout from "./HOCs/Layouts/AdminLayout";
 import { AuthRoute, PrivateRoute } from "./HOCs/Routes";
 import { fetchAdminInfo } from "./store/actions/authAction";
 import AddMovie from "./views/Movies/AddMovie";
+import EditMovie from "./views/Movies/EditMovie";
 
 function App() {
   const dispatch = useDispatch();
@@ -31,6 +32,11 @@ function App() {
           <PrivateRoute
             path="/movies/addMovie"
             component={AddMovie}
+            redirectPath="/"
+          />
+          <PrivateRoute
+            path="/movies/editMovie/:id"
+            component={EditMovie}
             redirectPath="/"
           />
           <PrivateRoute path="/users" component={Users} redirectPath="/" />
