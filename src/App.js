@@ -2,15 +2,15 @@ import "./App.css";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Switch } from "react-router-dom";
+import AdminLayout from "./HOCs/Layouts/AdminLayout";
 import Movies from "./views/Movies";
 import Users from "./views/Users";
-import Showtimes from "./views/Showtimes";
 import Signin from "./views/Signin";
-import AdminLayout from "./HOCs/Layouts/AdminLayout";
-import { AuthRoute, PrivateRoute } from "./HOCs/Routes";
-import { fetchAdminInfo } from "./store/actions/authAction";
 import AddMovie from "./views/Movies/AddMovie";
 import EditMovie from "./views/Movies/EditMovie";
+import Showtime from "./views/Movies/Showtime";
+import { AuthRoute, PrivateRoute } from "./HOCs/Routes";
+import { fetchAdminInfo } from "./store/actions/authAction";
 
 function App() {
   const dispatch = useDispatch();
@@ -24,12 +24,6 @@ function App() {
       <AdminLayout>
         <Switch>
           <PrivateRoute
-            exact
-            path="/movies"
-            component={Movies}
-            redirectPath="/"
-          />
-          <PrivateRoute
             path="/movies/addMovie"
             component={AddMovie}
             redirectPath="/"
@@ -39,10 +33,21 @@ function App() {
             component={EditMovie}
             redirectPath="/"
           />
-          <PrivateRoute path="/users" component={Users} redirectPath="/" />
           <PrivateRoute
-            path="/showtimes"
-            component={Showtimes}
+            path="/movies/showtime/:id"
+            component={Showtime}
+            redirectPath="/"
+          />
+          <PrivateRoute
+            exact
+            path="/movies"
+            component={Movies}
+            redirectPath="/"
+          />
+          <PrivateRoute
+            exact
+            path="/users"
+            component={Users}
             redirectPath="/"
           />
           <AuthRoute exact path="/" component={Signin} redirectPath="/movies" />

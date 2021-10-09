@@ -89,7 +89,7 @@ const AddMovie = () => {
 
   return (
     <div className="movieManage">
-      <Title level={4}>Thêm phim mới</Title>
+      <Title level={3}>Thêm phim mới</Title>
       <Form
         layout="horizontal"
         labelCol={{ span: 4 }}

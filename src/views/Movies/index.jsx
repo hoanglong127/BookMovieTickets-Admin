@@ -4,13 +4,18 @@ import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Typography, Input, Table } from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Button, Typography, Table } from "antd";
+import {
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  CalendarOutlined,
+} from "@ant-design/icons";
 import "./style.css";
+import InputSearch from "../../component/InputSearch";
 import { deleteMovie, fetchMovies } from "../../store/actions/movieAction";
 
 const { Title, Text } = Typography;
-const { Search } = Input;
 
 const Movies = () => {
   const history = useHistory();
@@ -63,10 +68,18 @@ const Movies = () => {
         <Fragment>
           <Link
             to={`/movies/editMovie/${id}`}
-            style={{ marginRight: 10, fontSize: 20 }}
+            style={{ marginRight: 12, fontSize: 20 }}
           >
             <Text type="warning">
               <EditOutlined />
+            </Text>
+          </Link>
+          <Link
+            to={`/movies/showtime/${id}`}
+            style={{ marginRight: 12, fontSize: 20 }}
+          >
+            <Text type="success">
+              <CalendarOutlined />
             </Text>
           </Link>
           <Text
@@ -82,12 +95,12 @@ const Movies = () => {
   ];
 
   useEffect(() => {
-    dispatch(fetchMovies);
+    dispatch(fetchMovies());
   }, []);
 
   // Xử lý tìm kiếm
   const onSearch = (value) => {
-    console.log(value);
+    dispatch(fetchMovies(value));
   };
 
   // Xử lý cuộn trang khi click vào pagination
@@ -119,7 +132,7 @@ const Movies = () => {
 
   return (
     <div className="movieManage">
-      <Title level={4}>Danh sách phim</Title>
+      <Title level={3}>Danh sách phim</Title>
       <div className="movieManage-controls">
         <Button
           onClick={() => history.push("/movies/addMovie")}
@@ -128,14 +141,7 @@ const Movies = () => {
         >
           Thêm phim
         </Button>
-        <Search
-          className="admin-search"
-          placeholder="Tìm kiếm"
-          onSearch={onSearch}
-          size="middle"
-          style={{ maxWidth: 500 }}
-          enterButton
-        />
+        <InputSearch onSearch={onSearch} />
       </div>
       <Table
         columns={columns}

@@ -100,7 +100,6 @@ const EditMovie = () => {
 
   const handleChangeDate = (value) => {
     const formatDate = moment(value);
-    console.log(moment(formatDate).format("DD/MM/YYYY"));
     setFieldValue("ngayKhoiChieu", formatDate);
   };
 
@@ -125,7 +124,7 @@ const EditMovie = () => {
 
   return (
     <div className="movieManage">
-      <Title level={4}>Chỉnh sửa phim</Title>
+      <Title level={3}>Chỉnh sửa phim</Title>
       <Form
         layout="horizontal"
         labelCol={{ span: 4 }}

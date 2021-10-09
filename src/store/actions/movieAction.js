@@ -3,18 +3,26 @@ import { request } from "../../api/request";
 import { DOMAIN, GROUP_ID } from "../../utils/config";
 import actionTypes from "../types";
 
-export const fetchMovies = async (dispatch) => {
-  try {
-    const res = await request({
-      method: "GET",
-      url: `${DOMAIN}/api/QuanLyPhim/LayDanhSachPhim`,
-      params: { MaNhom: GROUP_ID },
-    });
+export const fetchMovies = (movieName = "") => {
+  return async (dispatch) => {
+    try {
+      const res = await (movieName
+        ? request({
+            method: "GET",
+            url: `${DOMAIN}/api/QuanLyPhim/LayDanhSachPhim`,
+            params: { MaNhom: GROUP_ID, TenPhim: movieName },
+          })
+        : request({
+            method: "GET",
+            url: `${DOMAIN}/api/QuanLyPhim/LayDanhSachPhim`,
+            params: { MaNhom: GROUP_ID },
+          }));
 
-    dispatch(createAction(actionTypes.SET_MOVIE_LIST, res.data.content));
-  } catch (err) {
-    console.log(err);
-  }
+      dispatch(createAction(actionTypes.SET_MOVIE_LIST, res.data.content));
+    } catch (err) {
+      console.log(err);
+    }
+  };
 };
 
 export const fetchMovieInfo = (id) => {

@@ -5,7 +5,6 @@ import {
   MenuFoldOutlined,
   UserOutlined,
   VideoCameraOutlined,
-  InsertRowAboveOutlined,
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router";
@@ -24,9 +23,6 @@ const AdminLayout = ({ children }) => {
     switch (location.pathname) {
       case "/movies":
         setKey("movies");
-        break;
-      case "/showtimes":
-        setKey("showtimes");
         break;
       case "/users":
         setKey("users");
@@ -49,9 +45,6 @@ const AdminLayout = ({ children }) => {
         <Menu theme="dark" mode="inline" selectedKeys={key}>
           <Menu.Item key="movies" icon={<VideoCameraOutlined />}>
             <Link to="/movies">Quản lý phim</Link>
-          </Menu.Item>
-          <Menu.Item key="showtimes" icon={<InsertRowAboveOutlined />}>
-            <Link to="/showtimes">Quản lý lịch chiếu</Link>
           </Menu.Item>
           <Menu.Item key="users" icon={<UserOutlined />}>
             <Link to="/users">Quản lý người dùng</Link>
