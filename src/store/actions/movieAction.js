@@ -84,7 +84,7 @@ export const deleteMovie = (id, alertSuccess) => {
       });
 
       alertSuccess();
-      dispatch(fetchMovies);
+      dispatch(fetchMovies());
     } catch (err) {
       console.log(err);
     }

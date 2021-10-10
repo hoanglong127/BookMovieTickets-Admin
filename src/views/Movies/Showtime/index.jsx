@@ -1,42 +1,140 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Typography,
   Form,
   Button,
-  Cascader,
+  Select,
   DatePicker,
   InputNumber,
 } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router";
+import { useHistory, useParams } from "react-router";
 import { fetchMovieInfo } from "../../../store/actions/movieAction";
+import { request } from "../../../api/request";
+import { DOMAIN } from "../../../utils/config";
+import { useFormik } from "formik";
+import moment from "moment";
+import * as yup from "yup";
+import Swal from "sweetalert2";
 
 const { Title, Text } = Typography;
 
+const schema = yup.object().shape({
+  maRap: yup.string().required("Vui lòng chọn cụm rạp"),
+  ngayChieuGioChieu: yup
+    .string()
+    .required("Vui lòng chọn ngày chiếu, giờ chiếu"),
+});
+
 const Showtime = () => {
   const params = useParams();
+  const history = useHistory();
   const dispatch = useDispatch();
   const movieInfo = useSelector((state) => state.movieReducer.movieInfo);
+  const [cinema, setCinema] = useState({
+    theaterSystemList: [],
+    theaterList: [],
+  });
+  const { errors, touched, setFieldValue, handleSubmit } = useFormik({
+    initialValues: {
+      maPhim: params.id,
+      ngayChieuGioChieu: "",
+      maRap: "",
+      giaVe: 85000,
+    },
+    validateOnMount: true,
+    validationSchema: schema,
+    onSubmit: async (values, isValid) => {
+      if (!isValid) return;
+
+      try {
+        await request({
+          method: "POST",
+          url: `${DOMAIN}/api/QuanLyDatVe/TaoLichChieu`,
+          data: values,
+        });
+
+        Swal.fire({
+          icon: "success",
+          title: "Tạo lịch chiếu thành công!",
+        }).then(() => {
+          history.push("/movies");
+        });
+      } catch (err) {
+        console.log(err.response.data.content);
+      }
+    },
+  });
 
   useEffect(() => {
     const { id } = params;
     dispatch(fetchMovieInfo(id));
+
+    async function fetchTheaterSystem() {
+      try {
+        const res = await request({
+          method: "GET",
+          url: `${DOMAIN}/api/QuanLyRap/LayThongTinHeThongRap`,
+        });
+
+        setCinema({
+          ...cinema,
+          theaterSystemList: res.data.content,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    fetchTheaterSystem();
   }, []);
 
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const handleChangeDate = (value) => {
+    const time = moment(value).format("DD/MM/YYYY HH:mm:ss");
+    setFieldValue("ngayChieuGioChieu", time);
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+  const handleOkDate = (value) => {
+    const time = moment(value).format("DD/MM/YYYY HH:mm:ss");
+    setFieldValue("ngayChieuGioChieu", time);
   };
 
-  const onChange = (value) => {
-    console.log(value);
+  const handleChangeInputNumber = (value) => {
+    setFieldValue("giaVe", value);
   };
 
-  const onOk = (value) => {
-    console.log(value);
+  const handleChangeTheaterSystem = async (value) => {
+    try {
+      const res = await request({
+        method: "GET",
+        url: `${DOMAIN}/api/QuanLyRap/LayThongTinCumRapTheoHeThong`,
+        params: { maHeThongRap: value },
+      });
+
+      setCinema({
+        ...cinema,
+        theaterList: res.data.content,
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleChangeTheaters = (value) => {
+    setFieldValue("maRap", value);
+  };
+
+  const convertSelectTheaterSystem = () => {
+    return cinema.theaterSystemList.map((system) => ({
+      label: system.tenHeThongRap,
+      value: system.maHeThongRap,
+    }));
+  };
+
+  const convertSelectTheaters = () => {
+    return cinema.theaterList.map((theater) => ({
+      label: theater.tenCumRap,
+      value: theater.maCumRap,
+    }));
   };
 
   return (
@@ -50,42 +148,47 @@ const Showtime = () => {
         </div>
       </div>
       <Form
+        onSubmitCapture={handleSubmit}
         name="showtime"
         labelCol={{ span: 6 }}
         wrapperCol={{ span: 12 }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
         <Form.Item label="Hệ thống rạp">
-          <Cascader
-            options={[
-              { label: "CGV", value: "CGV" },
-              { label: "BHD", value: "BHD" },
-            ]}
-            onChange={onChange}
+          <Select
+            options={convertSelectTheaterSystem()}
+            onChange={handleChangeTheaterSystem}
             placeholder="Chọn hệ thống rạp"
           />
         </Form.Item>
 
         <Form.Item label="Cụm rạp">
-          <Cascader
-            options={[
-              { label: "CGV", value: "CGV" },
-              { label: "BHD", value: "BHD" },
-            ]}
-            onChange={onChange}
+          <Select
+            options={convertSelectTheaters()}
+            name="maRap"
+            onChange={handleChangeTheaters}
+            // onBlur={handleBlur}
             placeholder="Chọn cụm rạp"
           />
+          {touched.maRap && (
+            <span style={{ color: "red" }}>{errors.maRap}</span>
+          )}
         </Form.Item>
 
         <Form.Item label="Ngày chiếu, giờ chiếu">
           <DatePicker
             showTime
-            onChange={onChange}
-            onOk={onOk}
+            format="DD/MM/YYYY HH:mm:ss"
+            onChange={handleChangeDate}
+            onOk={handleOkDate}
+            name="ngayChieuGioChieu"
             placeholder="Chọn ngày giờ chiếu"
           />
+          {touched.ngayChieuGioChieu && (
+            <p style={{ color: "red", marginBottom: 0 }}>
+              {errors.ngayChieuGioChieu}
+            </p>
+          )}
         </Form.Item>
 
         <Form.Item label="Giá vé">
@@ -93,7 +196,7 @@ const Showtime = () => {
             min={85000}
             max={150000}
             defaultValue={85000}
-            onChange={onChange}
+            onChange={handleChangeInputNumber}
           />
         </Form.Item>
 
