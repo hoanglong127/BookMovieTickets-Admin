@@ -5,6 +5,11 @@ const actionTypes = {
   // MOVIE TYPE
   SET_MOVIE_LIST: "SET_MOVIE_LIST",
   SET_MOVIE_INFO: "SET_MOVIE_INFO",
+
+  // USER TYPE
+  SET_USER_LIST: "SET_USER_LIST",
+  SET_USER_TYPE_LIST: "SET_USER_TYPE_LIST",
+  SET_USER_INFO: "SET_USER_INFO",
 };
 
 export default actionTypes;
