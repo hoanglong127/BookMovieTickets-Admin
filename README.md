@@ -9,3 +9,11 @@ CRUD users, movies
 ## Technologies:
 
 React Hooks, Redux, Redux-thunk, Axios, Ant Design, Formik + Yup
+
+## Demo
+
+https://bookmovietickets-tix-admin.web.app
+
+Username: admintest127
+Password: admintest127
+
